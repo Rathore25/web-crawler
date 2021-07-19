@@ -20,8 +20,10 @@ class Converter():
         self.waveInfoPath       = "./waveMap.txt"
         self.indexName          = "crawleddocuments"
     
+    # to get all the crawled documents from elastic search and save it in local
     def ESToLocal(self):
-        totalBatches    = 821
+        # put the total number of documents in the index
+        totalBatches    = 7
         index           = 1
         failedBatches   = []
         startTime       = time.time()
@@ -124,6 +126,6 @@ class Converter():
             
 
 cn = Converter()
-#cn.ESToLocal()
+cn.ESToLocal()
 #cn.TransformLocalBatchedDocuments()
-cn.saveWaveInfo()
+#cn.saveWaveInfo()
