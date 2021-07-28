@@ -22,7 +22,7 @@ class ESManager():
         self.createCrawledDocumentsIndex()
     
     def getClient(self):
-        client = Elasticsearch([{'host':'localhost'}])
+        client = Elasticsearch([{'host':'crawler_elasticsearch'}])
         return client
     
     def createIndex(self, indexName, body):
