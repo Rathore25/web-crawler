@@ -17,7 +17,6 @@ PySocks==1.7.1
 redis==3.5.3
 regex==2021.7.6
 requests==2.26.0
-setuptools==52.0.0.post20210125
 six==1.16.0
 soupsieve==2.0.1
 typing-extensions==3.10.0.0
