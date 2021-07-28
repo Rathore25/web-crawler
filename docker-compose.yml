@@ -1,5 +1,10 @@
 version: "3.8"
 services:
+  crawler:
+    build: .
+    command: python MainCrawler.py
+    environment:
+      - CRAWLER_VERSION:V1
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
     ports:
@@ -10,29 +15,26 @@ services:
       - discovery.type=single-node
     volumes:
       - es-data:/usr/share/elasticsearch/data
-      - ./stoplist.txt:/usr/share/elasticsearch/config/my_stoplist.txt
-      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./Services/Elasticsearch/stoplist.txt:/usr/share/elasticsearch/config/my_stoplist.txt
+      - ./Services/Elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
-      - mynet
-  
+      - mynet  
   kibana:
     image: docker.elastic.co/kibana/kibana:7.9.1
     container_name: kibana_container
     volumes:
-      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+      - .Services/Elasticsearch/kibana.yml:/usr/share/kibana/config/kibana.yml
     networks:
       - mynet
     ports:
       - 5601:5601
     depends_on:
-      - elasticsearch
-  
+      - elasticsearch  
   redis:
     image: redis
     container_name: redis_container
     ports:
       - 6379:6379
-
 networks: 
   mynet:
     driver: bridge
