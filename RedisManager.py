@@ -11,7 +11,7 @@ import sys
 
 class RedisManager():
     def __init__(self):
-        self.pool               = redis.ConnectionPool(host='127.0.0.1', port=6379, db=0)
+        self.pool               = redis.ConnectionPool(host='crawler_redis', port=6379, db=0)
         self.crawledURLKeysName = "CrawledURLs"
         self.badURLsKeyName     = "BadURLs"
         self.nextWaveKeyName    = "NextWaveURLs"

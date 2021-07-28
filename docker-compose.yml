@@ -1,11 +1,6 @@
 version: "3.8"
-services:
-  crawler:
-    build: .
-    command: python MainCrawler.py
-    environment:
-      - CRAWLER_VERSION:V1
-  elasticsearch:
+services:  
+  crawler_elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
     ports:
       - 9200:9200
@@ -18,25 +13,50 @@ services:
       - ./Services/Elasticsearch/stoplist.txt:/usr/share/elasticsearch/config/my_stoplist.txt
       - ./Services/Elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
-      - mynet  
-  kibana:
+      - crawlernet  
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 1s
+      timeout: 3s
+      retries: 60
+  crawler_kibana:
     image: docker.elastic.co/kibana/kibana:7.9.1
     container_name: kibana_container
     volumes:
-      - .Services/Elasticsearch/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ./Services/Elasticsearch/kibana.yml:/usr/share/kibana/config/kibana.yml
     networks:
-      - mynet
+      - crawlernet
     ports:
       - 5601:5601
     depends_on:
-      - elasticsearch  
-  redis:
+      - crawler_elasticsearch  
+  crawler_redis:
     image: redis
     container_name: redis_container
     ports:
       - 6379:6379
+    networks:
+      - crawlernet
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+  crawler_job:
+    build: .
+    command: python ./MainCrawler.py
+    container_name: crawler_container
+    environment:
+      - CRAWLER_VERSION:V1
+    depends_on: 
+      crawler_elasticsearch:
+        condition: service_healthy
+      crawler_redis:
+        condition: service_healthy
+    networks:
+      - crawlernet
 networks: 
-  mynet:
+  crawlernet:
     driver: bridge
 
 volumes:
