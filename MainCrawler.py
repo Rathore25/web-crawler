@@ -20,6 +20,10 @@ class MainCrawler():
         self.URLHelper  = URLHelper()
         self.ESManager  = ESManager()
         self.RMManager  = RedisManager()
+        
+        # Run at start
+        self.ESManager.start_up()
+        self.RMManager.start_up()
     
     def main(self):
         # get crawl settings

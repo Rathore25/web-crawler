@@ -8,6 +8,7 @@ from URLHelper import URLHelper
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 import json
+import sys
 
 class ESManager():
     def __init__(self):
@@ -15,6 +16,10 @@ class ESManager():
         self.robotIndexName = "robotinfo"
         self.batchDocIndex  = "crawleddocuments"
         self.mainIndexName  = "websitecontents"
+    
+    def start_up(self):
+        self.createRobotIndex()
+        self.createCrawledDocumentsIndex()
     
     def getClient(self):
         client = Elasticsearch([{'host':'localhost'}])
@@ -44,28 +49,34 @@ class ESManager():
         return client.search(searchBody, index)
     
     def createCrawledDocumentsIndex(self):
-        settingsPath    = "./Settings/ES_CrawledDocsIndexSettings.json"
-        body            = {}
-        
-        with open(settingsPath) as f:
-            body = json.load(f)
-        
-        response = self.createIndex(self.batchDocIndex, body)
-        print("Chernobyl index created:",response)
+        try:
+            settingsPath    = "./Settings/ES_CrawledDocsIndexSettings.json"
+            body            = {}
+            
+            with open(settingsPath) as f:
+                body = json.load(f)
+            
+            response = self.createIndex(self.batchDocIndex, body)
+            print("Crawled docs index created:",response)
+        except:
+            print("Unexpected error in Crawled docs index creation:", sys.exc_info()[0])
     
     def pushCrawledDocuments(self, batchId, content):
         body        = {'content':content}
         response    = self.push(self.batchDocIndex, batchId, body)
     
     def createRobotIndex(self):
-        settingsPath    = "./Settings/ES_RobotIndexSettings.json"
-        body            = {}
-        
-        with open(settingsPath) as f:
-            body = json.load(f)
-        
-        response = self.createIndex(self.robotIndexName, body)
-        print("Robot index created:",response)
+        try:
+            settingsPath    = "./Settings/ES_RobotIndexSettings.json"
+            body            = {}
+            
+            with open(settingsPath) as f:
+                body = json.load(f)
+            
+            response = self.createIndex(self.robotIndexName, body)
+            print("Robot index created:",response)
+        except:
+            print("Unexpected error in Robot index creation:", sys.exc_info()[0])
     
     def insertRobotInfo(self, url:str, content:str):
         components  = self.URLHelper.getComponents(url)

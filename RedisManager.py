@@ -7,6 +7,7 @@ Created on Thu Nov  5 22:30:24 2020
 
 import redis
 import urllib
+import sys
 
 class RedisManager():
     def __init__(self):
@@ -16,6 +17,15 @@ class RedisManager():
         self.nextWaveKeyName    = "NextWaveURLs"
         self.waveNumberKeyName  = "WN_"
         self.badDomain          = "BadDomains"
+    
+    def start_up(self):
+        try:
+            self.pushURLInfo("abcd", -1 ,["b"], ["a"])
+            self.pushBadURL("abcd_bad")
+            self.pushBadDomain("https://web.archive.org")
+            self.pushBadDomain("https://curlie.org")
+        except:
+            print("Unexpected error in redis startup:", sys.exc_info()[0])
     
     def getSet(self, key):
         client      = redis.Redis(connection_pool=self.pool)
