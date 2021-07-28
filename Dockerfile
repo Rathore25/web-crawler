@@ -9,4 +9,4 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-CMD ["python","MainCrawler.py"]
+CMD ["python","./MainCrawler.py"]
