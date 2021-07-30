@@ -19,17 +19,6 @@ services:
       interval: 1s
       timeout: 3s
       retries: 60
-  crawler_kibana:
-    image: docker.elastic.co/kibana/kibana:7.9.1
-    container_name: kibana_container
-    volumes:
-      - ./Services/Elasticsearch/kibana.yml:/usr/share/kibana/config/kibana.yml
-    networks:
-      - crawlernet
-    ports:
-      - 5601:5601
-    depends_on:
-      - crawler_elasticsearch  
   crawler_redis:
     image: redis
     container_name: redis_container
