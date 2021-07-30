@@ -1,5 +1,5 @@
 {
-    "totalDocs": 10000,
+    "totalDocs": 100000,
     "crawlDelay": 0.75,
     "batchSize": 50,
     "importantTerms": ["small","inclusive economics","minority-owned business","disadvantaged business enterprise","small business enterprise","minority business enterprise","women business enterprise","m/wbe certification","diversity","equity","inclusion","access","DEIA","DEI","Women-owned","Black-owned","BIPOC","small business","community development","Black entrepreneurship","Black women entrepreneurship","women entrepreneurship","entrepreneurship ecosystem","health is wealth","impact investing","social impact","8(a)"],
