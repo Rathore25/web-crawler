@@ -1,0 +1,54 @@
+version: 0.2
+
+
+# Specify the runtime environment
+
+env:
+  variables:
+    PYTHON_VERSION: "3.12"
+
+
+# Specify the phases of the build process
+phases:
+  # Install phase - install any dependencies required for the build
+  install:
+    # Install the specified Python version
+    runtime-versions:
+      python: $(PYTHON_VERSION)
+    # Install any additional dependencies required for the build
+    commands:
+      - pip install --upgrade pip
+      - pip install -r requirements.txt  # Install project dependencies from requirements.txt file
+
+  # Pre-build phase - Any commands to run before the build phase
+  pre_build:
+    commands:
+      - echo "Running pre-build commands..."
+      # Any pre-build commands you need to run
+
+  # Build phase - Build commands to run
+  build:
+    commands:
+      - echo "Running build commands..."
+      # Build commands to run, e.g., running tests, linting, etc.
+      - python ./MainCrawler.py
+      - pylint **/*.py  # Run pylint for code linting
+
+  # Post-build phase - Any commands to run after the build phase
+
+  post_build:
+    commands:
+      - echo "Running post-build commands..."
+      # Any post-build commands you need to run, e.g., packaging artifacts
+
+
+# Artifacts section - Specify the artifacts to upload to S3
+artifacts:
+  files:
+    - '**/*'  # Upload all files in the project directory
+  base-directory: './'  # Base directory of your project
+
+# Cache section - Specify the paths to cache for subsequent builds
+cache:
+  paths:
+    - '/root/.cache/pip/*'  # Cache the pip cache directory
